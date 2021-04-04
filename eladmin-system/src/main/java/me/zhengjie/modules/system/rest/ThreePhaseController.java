@@ -17,9 +17,9 @@ package me.zhengjie.modules.system.rest;
 
 import me.zhengjie.annotation.AnonymousAccess;
 import me.zhengjie.annotation.Log;
-import me.zhengjie.modules.system.domain.TestChange;
 import me.zhengjie.modules.system.domain.ThreePhase;
 import me.zhengjie.modules.system.service.ThreePhaseService;
+import me.zhengjie.modules.system.service.dto.ThreePhaseDto;
 import me.zhengjie.modules.system.service.dto.ThreePhaseQueryCriteria;
 import org.springframework.data.domain.Pageable;
 import lombok.RequiredArgsConstructor;
@@ -58,7 +58,7 @@ public class ThreePhaseController {
     @GetMapping
     @Log("查询")
     @ApiOperation("查询")
-    @PreAuthorize("@el.check('threePhase:list')")
+//    @PreAuthorize("@el.check('threePhase:list')")
     public ResponseEntity<Object> query(ThreePhaseQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity<>(threePhaseService.queryAll(criteria,pageable),HttpStatus.OK);
     }
@@ -97,5 +97,17 @@ public class ThreePhaseController {
     public ResponseEntity<Object> delete(@RequestBody Long[] ids) {
         threePhaseService.deleteAll(ids);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping
+    @ApiOperation("query_by_station")
+    @RequestMapping(value = "/query_by_station")
+    public ResponseEntity<Object> queryByStation(@RequestParam String stationName) throws Exception {
+        if (stationName == null || "".equals(stationName)) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        ThreePhaseQueryCriteria threePhaseQueryCriteria = new ThreePhaseQueryCriteria();
+        threePhaseQueryCriteria.setStation(stationName);
+        return new ResponseEntity<>(threePhaseService.queryAll(threePhaseQueryCriteria), HttpStatus.OK);
     }
 }

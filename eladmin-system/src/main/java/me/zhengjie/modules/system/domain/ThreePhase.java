@@ -40,6 +40,7 @@ import java.io.Serializable;
 public class ThreePhase implements Serializable {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     @ApiModelProperty(value = "id")
     private Long id;
